@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CII / Release Control</title>
+  <style>
+    :root{--bg:#0e0e0e;--ink:#e8e8e2;--dim:#94948d;--acc:#c6f432;--line:#3b3b37;--panel:#151714}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,Consolas,monospace;min-height:100vh;overflow:hidden}
+    body:before{content:"";position:fixed;width:800px;height:800px;left:-260px;top:-320px;border-radius:50%;background:#1c1f14;opacity:.55}
+    body:after{content:"";position:fixed;right:14%;top:-180px;width:1px;height:620px;background:var(--line);transform:rotate(27deg);box-shadow:90px 0 0 rgba(232,232,226,.08)}
+    .wrap{position:relative;z-index:1;max-width:1180px;margin:8vh auto;padding:0 28px}
+    .micro{color:var(--dim);font-size:11px;letter-spacing:.16em}.title{font-size:25px;letter-spacing:.08em;margin:10px 0 28px}.title b{color:var(--acc);font-weight:500}
+    .card{border:1px solid var(--line);background:rgba(232,232,226,.025);padding:28px 32px;min-height:310px;position:relative}
+    .card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--acc)}
+    .row{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}.label{color:var(--dim);font-size:11px;letter-spacing:.12em;margin-bottom:8px}
+    .name{font-size:20px;letter-spacing:.08em}.version{font-family:Segoe UI Variable Display,Segoe UI,sans-serif;font-size:84px;font-weight:200;line-height:1;color:transparent;-webkit-text-stroke:1.4px var(--acc);margin:26px 0}
+    .kv{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line);padding:12px 0;font-size:13px}.kv span:first-child{color:var(--dim)}
+    .dot{display:inline-block;width:8px;height:8px;background:var(--acc);transform:rotate(45deg);margin-right:10px}
+    .error{color:#f05b67}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="micro">CII / RELEASE REGISTRY / PUBLIC</div>
+    <div class="title">RELEASE <b>CONTROL</b></div>
+    <section class="card" id="card">
+      <div class="micro">LOADING / VERSION MANIFEST</div>
+    </section>
+  </main>
+  <script>
+    async function render(){
+      const card=document.getElementById('card');
+      try{
+        const r=await fetch('./version.json?t='+Date.now(),{cache:'no-store'});
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        const j=await r.json(); const t=j.tools['cii-ops-sm1'];
+        card.innerHTML=`
+          <div class="row">
+            <div>
+              <div class="label">TOOL / ACTIVE</div>
+              <div class="name"><span class="dot"></span>${t.name}</div>
+              <div class="version">${t.latest_version}</div>
+            </div>
+            <div>
+              <div class="kv"><span>STATUS</span><span>APPROVED / CURRENT</span></div>
+              <div class="kv"><span>LATEST VERSION</span><span>${t.latest_version}</span></div>
+              <div class="kv"><span>DOWNLOAD</span><span>${t.download_url||'—'}</span></div>
+              <div class="kv"><span>MESSAGE</span><span>${t.message||'—'}</span></div>
+            </div>
+          </div>`;
+      }catch(e){card.innerHTML='<div class="micro error">MANIFEST ERROR / '+String(e)+'</div>'}
+    }
+    render();
+  </script>
+</body>
+</html>
