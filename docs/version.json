@@ -3,7 +3,7 @@
   "tools": {
     "cii-ops-sm1": {
       "name": "CII-OPS-SM1",
-      "latest_version": "3.3.6",
+      "latest_version": "3.3.7",
       "download_url": "",
       "message": "Please install the latest approved version before continuing."
     }
